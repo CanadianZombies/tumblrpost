@@ -17,3 +17,14 @@ Be warned that as this is not tested, it may not work, or may require minor edit
 I will be testing this when time provides and posting a corrected version.
 
 This is expected to work with Python 3.6 with minimal work as that is what it was designed for.
+
+
+** WHY WAS THIS WRITTEN **
+I do streaming on dlive.tv (http://www.dlive.tv/SimmyDizzle) and as a result of that, I tend to take screenshots and instant replay
+videos (30 second clips). I wanted a quick way to automatically post them to my social media. As I have them saving to one folder
+it made sense to just generate a quick system, I hit F2, it takes a 30 second video capture, the script runs as it is always running,
+it sees a new file created, it tosses it to twitter. Blamsauce, done. No work for me, middle of my stream it posts, and I don't have to
+do anything to make it happen.
+
+I am incredibly lazy that way. So with that said, I do not know if this works entirely yet, and I will probably spend a month debugging it
+but it is something that I feel will benefit the world. So I am sharing it with everyone.
