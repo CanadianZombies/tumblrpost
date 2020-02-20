@@ -42,7 +42,7 @@ access_token_secret = ''
 today = time.strftime("%Y-%m-%d %H:%M")
 
 # list of our approved filetypes
-approved_types = ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'flv', 'avi', 'mp4', 'mkv']
+approved_types = ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'avi', 'mp4', 'mkv']
 
 # list of phrases used in tweet generation (we can keep adding these)
 # the idea will be like STREAMER_NAME + COMMENT, so like 'SimmyDizzle is on a roll!' will be generated.
