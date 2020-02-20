@@ -30,7 +30,15 @@ import tweepy
 
 # import the operating system functions
 import os
- 
+
+# do we want to use the 'random' phrases we generated below?
+USE_PHRASES = false
+
+# do we want to use a series of Retweet bots to push our data out
+# this should be disabled when you have a large following as it will
+# get VERY spammy to those who follow you. Use with caution.
+USE_RT = true
+
 # Consumer keys and access tokens, used for OAuth
 # you will need to generate these on dev.twitter.com
 consumer_key = ''
@@ -127,8 +135,15 @@ class Handler(FileSystemEventHandler):
                 imagePath = event.src_path # this should be the file that was created
 
                 # Set the string, we don't want the tweet being blocked by repeating, so we set date/time of the event.
-                status = "#NPC " + STREAMER_NAME + " " + phrases[random.randint(0,len(phrases)-1)] + today + " " + WEBSITE_NAME
+                if USE_PHRASES:
+                    status = "#NPC " + STREAMER_NAME + " " + phrases[random.randint(0,len(phrases)-1)] + today + " " + WEBSITE_NAME
+                else:
+                    status = "#NPC Visit " + STREAMER_NAME + " over on @OfficialDlive" + WEBSITE_NAME
 
+                # if we are going to use RT bots
+                if USE_RT:
+                    status = status + " @sme_rt @DriptRT @FearRTs @Pulse_Rts"
+                
                 # Send the tweet.
                 api.update_with_media(imagePath, status)
              else:
