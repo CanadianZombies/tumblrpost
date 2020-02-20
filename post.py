@@ -74,14 +74,28 @@ STREAMER_NAME = "SimmyDizzle"
 WEBSITE_NAME = "http://www.dlive.tv/SimmyDizzle"
 
 # do we want to use the 'random' phrases we generated below?
-USE_PHRASES = false
+USE_PHRASES = False
+
+# enabled for debugging purposes (True/False)
+DEBUG_MODE = True
+
+# tweepyControl (Disable this if you want to test thins without posting them to twitter)
+# works best when DEBUG_MODE is enable and this is disabled (you'll see logs of things being
+# detected/changed without posting to twitter)
+TWEEPY_CONTROL = True
 
 # do we want to use a series of Retweet bots to push our data out
 # this should be disabled when you have a large following as it will
 # get VERY spammy to those who follow you. Use with caution.
-USE_RT = true
+USE_RT = True
 
 ###########################################################################################################
+
+# Logger function, tracks the current time of the log-entry, and the log message so long as DEBUG_MODE is enabled.
+# designed to allow for debugging purposes. Obviously we want to minimize all output to maintain minimal footprint.
+def Logger(str):
+    if DEBUG_MODE:
+        print("{%s} %s" % (time.strftime("%Y-%m-%d %H:%M"), str))
 
 
 # OAuth process, using the keys and tokens
@@ -116,10 +130,12 @@ class Handler(FileSystemEventHandler):
 
         elif event.event_type == 'created':
             # Take any action here when a file is first created.
-            print ("Received created event - %s." % event.src_path)
+            Logger("Received created event - %s." % event.src_path)
 
             found = False
 
+            # Validate that the file type discovered is actually one that we can push
+            # to twitter. (This is vital to ensure we don't push somethin that should be pushed)
             for i in approved_types: 
                 if (event.src_path.find("." + approved_types[i]) != '-1'):
                     found = True
@@ -139,15 +155,22 @@ class Handler(FileSystemEventHandler):
                 # if we are going to use RT bots
                 if USE_RT:
                     status = status + " @sme_rt @DriptRT @FearRTs @Pulse_Rts"
-                
+
+                # Debugging code to help track everything nicely.
+                Logger("Status update: %s\nImage Path: %s" % (status, imagePath) )
+                    
                 # Send the tweet.
-                api.update_with_media(imagePath, status)
+                if TWEEPY_CONTROL:
+                    # tweepy control is active, print it out!
+                    api.update_with_media(imagePath, status)
+                    
             else:
-                print ("File is not an approved type")
+                Logger("File is not an approved type")
 
         elif event.event_type == 'modified':
             # Taken any action here when a file is modified.
-            print ("Received modified event - %s." % event.src_path)
+            # this print statement will be removed when we are done debuggin the application.
+            Logger("Received modified event - %s." % event.src_path)
 
 
 ###########################################################################################################
@@ -159,13 +182,14 @@ if __name__ == '__main__':
     # Creates the user object. The me() method returns the user whose authentication keys were used.
     user = api.me()
    
-    # print out the list of approved filetypes
-    print("Accepted Filestypes: " + approved_types )
+    if DEBUG_MODE:
+        # print out the list of approved filetypes
+        Logger("Accepted Filestypes: " + approved_types )
 
-    # Testing to see if the API is borked or not. (on boot, if this displays wrong, then something was done wrong)
-    print('Name: ' + user.name)
-    print('Location: ' + user.location)
-    print('Friends: ' + str(user.friends_count))
+        # Testing to see if the API is borked or not. (on boot, if this displays wrong, then something was done wrong)
+        Logger('Name: ' + user.name)
+        Logger('Location: ' + user.location)
+        Logger('Friends: ' + str(user.friends_count))
 
     # Create watcher
     w = Watcher()
