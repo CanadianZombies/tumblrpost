@@ -142,12 +142,12 @@ class Handler(FileSystemEventHandler):
                 
                 # Send the tweet.
                 api.update_with_media(imagePath, status)
-		else:
-			print ("File is not an approved type")
+            else:
+                print ("File is not an approved type")
 
         elif event.event_type == 'modified':
             # Taken any action here when a file is modified.
-            print "Received modified event - %s." % event.src_path
+            print ("Received modified event - %s." % event.src_path)
 
 
 ###########################################################################################################
