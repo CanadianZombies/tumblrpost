@@ -127,7 +127,7 @@ class Handler(FileSystemEventHandler):
                 imagePath = event.src_path # this should be the file that was created
 
                 # Set the string, we don't want the tweet being blocked by repeating, so we set date/time of the event.
-                status = STREAMER_NAME + " " + phrases[random.randint(0,len(phrases)-1)] + today + " " + WEBSITE_NAME
+                status = "#NPC " + STREAMER_NAME + " " + phrases[random.randint(0,len(phrases)-1)] + today + " " + WEBSITE_NAME
 
                 # Send the tweet.
                 api.update_with_media(imagePath, status)
