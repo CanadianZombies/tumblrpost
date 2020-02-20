@@ -31,14 +31,6 @@ import tweepy
 # import the operating system functions
 import os
 
-# do we want to use the 'random' phrases we generated below?
-USE_PHRASES = false
-
-# do we want to use a series of Retweet bots to push our data out
-# this should be disabled when you have a large following as it will
-# get VERY spammy to those who follow you. Use with caution.
-USE_RT = true
-
 # Consumer keys and access tokens, used for OAuth
 # you will need to generate these on dev.twitter.com
 consumer_key = ''
@@ -84,6 +76,13 @@ STREAMER_NAME = "SimmyDizzle"
 # Website-Name
 WEBSITE_NAME = "http://www.dlive.tv/SimmyDizzle"
 
+# do we want to use the 'random' phrases we generated below?
+USE_PHRASES = false
+
+# do we want to use a series of Retweet bots to push our data out
+# this should be disabled when you have a large following as it will
+# get VERY spammy to those who follow you. Use with caution.
+USE_RT = true
 
 ###########################################################################################################
 
