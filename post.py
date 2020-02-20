@@ -18,7 +18,7 @@ import random           # import the random number generator (for science)
 import time             # import the time system
 import datetime         # import the datetime system
 
-import tweepy           # tweepy may require the installation of pip.
+import tweepy           # tweepy may require the installation of pip. (http://docs.tweepy.org/en/latest/)
 import os               # import the operating system functions
 
 from watchdog.observers import Observer
