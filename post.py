@@ -1,36 +1,30 @@
-##############################################################
-#  Twitter AUTOPOST script by David Simmerson (SimmyDizzle)  #
-##############################################################
-# This script will scrape a folder every 5 seconds for new   #
-# files and then automatically tweet them to the twitterverse#
-# on the specified twitter account.                          #
-##############################################################
-# Videos can be a maximum of 2 minutes and 20 seconds and    #
-# have to be the appropriate file format otherwise the tweet #
-# will be rejected.                                          #
-# Videos cannot exceed 512MB, otherwise they will be rejected#
-##############################################################
-# Any image file should work properly out of the gate so long#
-# as it is not larger than 20MB if the API guide is to be    #
-# trusted.                                                   #
-##############################################################
+###########################################################################################################
+#                        Twitter AUTOPOST script by David Simmerson (SimmyDizzle)                         #
+###########################################################################################################
+# This script will scrape a folder every 5 seconds for new files and then automatically tweet them to the #
+# twitterverse on the specified twitter account.                                                          #
+###########################################################################################################
+# Videos can be a maximum of 2 minutes and 20 seconds and have to be the appropriate file format otherwise#
+# the tweet will be rejected. Videos cannot exceed 512MB, otherwise they will be rejected.                #
+###########################################################################################################
+# Any image file should work properly out of the gate so long as it is not larger than 20MB if the API    #
+# guide is to be trusted.                                                                                 #
+###########################################################################################################
 
-# import the random number generator (for science)
-import random
+###########################################################################################################
+# Import required modules(packages) to ensure that the twitterpost system will work.
+import random           # import the random number generator (for science)
 
-# import the time system
-import time
-import datetime
+import time             # import the time system
+import datetime         # import the datetime system
+
+import tweepy           # tweepy may require the installation of pip.
+import os               # import the operating system functions
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-# tweepy may require the installation of pip.
-import tweepy
-
-# import the operating system functions
-import os
-
+###########################################################################################################
 # Consumer keys and access tokens, used for OAuth
 # you will need to generate these on dev.twitter.com
 consumer_key = ''
@@ -38,12 +32,15 @@ consumer_secret = ''
 access_token = ''
 access_token_secret = ''
 
+###########################################################################################################
 # grab a baseline timeframe before main is called. (Filler)
 today = time.strftime("%Y-%m-%d %H:%M")
 
+###########################################################################################################
 # list of our approved filetypes
 approved_types = ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'avi', 'mp4', 'mkv']
 
+###########################################################################################################
 # list of phrases used in tweet generation (we can keep adding these)
 # the idea will be like STREAMER_NAME + COMMENT, so like 'SimmyDizzle is on a roll!' will be generated.
 phrases = [
@@ -153,6 +150,7 @@ class Handler(FileSystemEventHandler):
             print "Received modified event - %s." % event.src_path
 
 
+###########################################################################################################
 # Prostitute the mission, I mean, execute the script function.
 if __name__ == '__main__':
     # Creation of the actual interface, using authentication
@@ -174,3 +172,7 @@ if __name__ == '__main__':
 
     # Execute the watcher script
     w.run()
+
+###########################################################################################################
+#EOF
+    
