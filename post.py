@@ -102,7 +102,7 @@ class Watcher:
                 time.sleep(SECONDS_TO_SLEEP) # Configured above
         except:
             self.observer.stop()
-            print "Error with the watcher"
+            print ("Error with the watcher")
 
         self.observer.join()
 
@@ -116,7 +116,7 @@ class Handler(FileSystemEventHandler):
 
         elif event.event_type == 'created':
             # Take any action here when a file is first created.
-            print "Received created event - %s." % event.src_path
+            print ("Received created event - %s." % event.src_path)
 
             found = False
 
@@ -142,8 +142,8 @@ class Handler(FileSystemEventHandler):
                 
                 # Send the tweet.
                 api.update_with_media(imagePath, status)
-             else:
-                 print "File is not an approved type"
+		else:
+			print ("File is not an approved type")
 
         elif event.event_type == 'modified':
             # Taken any action here when a file is modified.
@@ -175,4 +175,3 @@ if __name__ == '__main__':
 
 ###########################################################################################################
 #EOF
-    
