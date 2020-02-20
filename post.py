@@ -137,7 +137,7 @@ class Handler(FileSystemEventHandler):
                 if USE_PHRASES:
                     status = "#NPC " + STREAMER_NAME + " " + phrases[random.randint(0,len(phrases)-1)] + today + " " + WEBSITE_NAME
                 else:
-                    status = "#NPC Visit " + STREAMER_NAME + " over on @OfficialDlive" + WEBSITE_NAME
+                    status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on @OfficialDlive" + WEBSITE_NAME
 
                 # if we are going to use RT bots
                 if USE_RT:
