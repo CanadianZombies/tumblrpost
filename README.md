@@ -1,12 +1,20 @@
-# twitterpost
+# tumblrpost
 ########################################################################################################################################
-A script that will take any new files of an approved file-type, and post them to twitter.
+A script that will take any new files of an approved file-type, and post them to tumblr.
 
-Requires you to understand the oauth process. You will need to visit dev.twitter.com and create an 'application' to link your
-twitter to this application (oauth requirement).
+Requires you to understand the oauth process. You will need to visit tumblr.com and create an 'application' to link your
+tumblr to this application (oauth requirement).
 
-This script also requires that you have the 3rd party module tweepy. This can be installed via PIP.
-      http://docs.tweepy.org/en/latest/   (link to tweepy's docs)
+This script also requires that you have the 3rd party module PyTumblr, watchdog, and observer.
+Commands to run:
+
+      pip install pytumblr
+      pip install watchdog
+      pip install observer
+
+This script was originally designed to work with twitter however, the devs at twitter denied my application request so I could not get
+the appropriate oauth configuration to build the application. I have since then moved to using tumblr. This change works perfectly. If
+you still want to push your post over to twitter, I highly recommend using IFTTT (if this than that).
 
 ########################################################################################################################################
 How this works:
@@ -14,8 +22,15 @@ It monitors your specified directory, scans it every 5 seconds, and if there is 
 that timeframe, it will evaluate it against the criteria provided (approved file extensions) and if it matches, it will
 proceed to generate a tweet with your username, a witty statement, the date/time group, and a link to your website.
 
-It will also attach the image/video file and post it to twitter on your behalf.
+It will also attach the image/video file and post it to tumblr on your behalf.
 
+The files will sit in a queue that processes roughly every 25 minutes, and will publish one at a time. It does this because tumblr will
+not allow you to publish more than one video at a time, it will reject the file while another one is processing. So I gave it a brief
+moment between each post without returning an invalid response. Tumblr also has a daily limit of 250 posts. So that is something to be
+aware of as well, however it will do the trick.
+
+I have configured this to publish to tumblr, then I use IFTTT to push the content to twitter. This is the easiest method I have come
+across to handle this unless twitter decides to approve my application next time I apply. Which I will do.
 
 ########################################################################################################################################
 ** THIS HAS NOT BEEN TESTED YET **
@@ -33,7 +48,7 @@ This is expected to work with Python 3.4 with minimal work as that is what it wa
 I do streaming on dlive.tv (http://www.dlive.tv/SimmyDizzle) and as a result of that, I tend to take screenshots and instant replay
 videos (30-60 second clips). I wanted a quick way to automatically post them to my social media. As I have them saving to one folder
 it made sense to just generate a quick system, I hit F2, it takes a 30 second video capture, the script runs as it is always running,
-it sees a new file created, it tosses it to twitter. Blamsauce, done. No work for me, middle of my stream it posts, and I don't have to
+it sees a new file created, it tosses it to tumblr. Blamsauce, done. No work for me, middle of my stream it posts, and I don't have to
 do anything to make it happen.
 
 I am incredibly lazy that way. So with that said, I do not know if this works entirely yet, and I will probably spend a month 
@@ -56,5 +71,8 @@ would be easier to be managed at the global level instead of the local level. I.
 
 Aside from the config update (yet to come), the only other updates / planned changes for the future are that of bug fixes and possibly
 optimizations to the source to ensure that it is not bogging down the system it is running on. This is obviously the most important
-part as this is intended to be a seemless/smooth script, hiding away in the background uploading files to twitter for you.
+part as this is intended to be a seemless/smooth script, hiding away in the background uploading files to tumblr for you.
 
+I am going to add instagram into the mix here as well. I am applying for a developer api key for instagram. The goal being to be able
+to automatically upload to instagram as well. Same files, different queue. This is an easy measure for development so long as instagram
+approves the application. As policy has changed for 3rd party application development with instagram, this may be a ways out.
