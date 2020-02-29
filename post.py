@@ -54,6 +54,7 @@ phrases = [
     'is out of crazy ideas'
 ]
 
+# Will update this later to use STREAMER_NAME instead of using hard-coded data.
 captions_to_use = [
     'SimmyDizzle Live Presents:',
     'Crazy times with SimmyDizzle:',
@@ -80,6 +81,17 @@ captions_to_use = [
     'Fancy no pantsie!',
     'Blamsauce!',
     'Magic here!',
+    'Continued success?',
+    'Streaming games is fun!',
+    'Streaming games is entertaining!',
+    'Video game streaming!',
+    'Successful streaming like whaaa!',
+    'I am inevitable',
+    'I am Iron Pan',
+    'Pan, Cast-Iron, Pan.',
+    'Is this where the zombie apocalypse starts?',
+    'do do do do do... Do do!?',
+    'do dew do do',
 ]
 
 ###########################################################################################################
@@ -130,10 +142,8 @@ def Logger(str):
         print("{%s} %s" % (time.strftime("%Y-%m-%d %H:%M"), str))
 
 
-# OAuth process, using the keys and tokens
-#auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-#auth.set_access_token(access_token, access_token_secret)
-
+###########################################################################################################
+# Watcher class for tracking a directory and its changes.
 class Watcher:
     def __init__(self):
         self.observer = Observer()
