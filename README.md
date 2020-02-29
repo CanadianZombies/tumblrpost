@@ -11,6 +11,7 @@ Commands to run:
       pip install pytumblr
       pip install watchdog
       pip install observer
+      pip install googletrans
 
 This script was originally designed to work with twitter however, the devs at twitter denied my application request so I could not get
 the appropriate oauth configuration to build the application. I have since then moved to using tumblr. This change works perfectly. If
@@ -32,6 +33,10 @@ aware of as well, however it will do the trick.
 I have configured this to publish to tumblr, then I use IFTTT to push the content to twitter. This is the easiest method I have come
 across to handle this unless twitter decides to approve my application next time I apply. Which I will do.
 
+*** UPDATE ***
+This system now uses googletrans from PyPi, this will translate the 'caption' string and status into different languages.
+This is so that these can reach different groups of people. Hopefully.
+
 ########################################################################################################################################
 ** THIS HAS NOT BEEN TESTED YET **
 Be warned that as this is not tested, it may not work, or may require minor editing to get up and running.
@@ -45,7 +50,7 @@ This is expected to work with Python 3.4 with minimal work as that is what it wa
 
 ########################################################################################################################################
 ** WHY WAS THIS WRITTEN **
-I do streaming on dlive.tv (http://www.dlive.tv/SimmyDizzle) and as a result of that, I tend to take screenshots and instant replay
+I do streaming on twutch.tv (http://www.twitch.tv/SimmyDizzle) and as a result of that, I tend to take screenshots and instant replay
 videos (30-60 second clips). I wanted a quick way to automatically post them to my social media. As I have them saving to one folder
 it made sense to just generate a quick system, I hit F2, it takes a 30 second video capture, the script runs as it is always running,
 it sees a new file created, it tosses it to tumblr. Blamsauce, done. No work for me, middle of my stream it posts, and I don't have to
