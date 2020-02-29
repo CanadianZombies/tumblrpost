@@ -14,23 +14,19 @@
 ###########################################################################################################
 # Import required modules(packages) to ensure that the twitterpost system will work.
 import random           # import the random number generator (for science)
+import array            # import the array module
 
 import time             # import the time system
 import datetime         # import the datetime system
 
-import tweepy           # tweepy may require the installation of pip. (http://docs.tweepy.org/en/latest/)
 import os               # import the operating system functions
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-###########################################################################################################
-# Consumer keys and access tokens, used for OAuth
-# you will need to generate these on dev.twitter.com
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_token_secret = ''
+import json             # import the json package to process files
+import pytumblr         # import the pytumblr package
+
 
 ###########################################################################################################
 # grab a baseline timeframe before main is called. (Filler)
@@ -59,19 +55,25 @@ phrases = [
 ]
 
 ###########################################################################################################
+# array for tracking files to push.
+push_array = [] # empty array(list).
+
+
+###########################################################################################################
 ##                               CONFIGURATIONAL SETTINGS FOR THE TWEET                                  ##
 ###########################################################################################################
 # This is how many seconds the application will sleep between system passes
-SECONDS_TO_SLEEP = 5
+SECONDS_TO_SLEEP = 5 # 5 seconds was old default
 
 # CHANGE ME -- This is the folder where your new files will be scraped from!
-DIRECTORY_TO_WATCH = "path/to/your/files" # Windows Example: c:\\users\\myusername\\pictures\\
+#DIRECTORY_TO_WATCH = "c:\\users\\myusername\\pictures\\
+DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Replays"
 
 # Streamer-Name
 STREAMER_NAME = "SimmyDizzle"
 
 # Website-Name
-WEBSITE_NAME = "http://www.dlive.tv/SimmyDizzle"
+WEBSITE_NAME = "http://www.twitch.tv/SimmyDizzle"
 
 # do we want to use the 'random' phrases we generated below?
 USE_PHRASES = False
@@ -82,12 +84,14 @@ DEBUG_MODE = True
 # tweepyControl (Disable this if you want to test thins without posting them to twitter)
 # works best when DEBUG_MODE is enable and this is disabled (you'll see logs of things being
 # detected/changed without posting to twitter)
-TWEEPY_CONTROL = True
+TWEEPY_CONTROL = False
 
 # do we want to use a series of Retweet bots to push our data out
 # this should be disabled when you have a large following as it will
 # get VERY spammy to those who follow you. Use with caution.
 USE_RT = True
+
+tags_to_use = ["LiveSimmy", "Streaming", "Games", "ok", "twitchtv", "twitch", "SimmyDizzle", "NextLevel", "video games", "video", "gaming"]
 
 ###########################################################################################################
 
@@ -99,8 +103,8 @@ def Logger(str):
 
 
 # OAuth process, using the keys and tokens
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
+#auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+#auth.set_access_token(access_token, access_token_secret)
 
 class Watcher:
     def __init__(self):
@@ -111,12 +115,74 @@ class Watcher:
         self.observer.schedule(event_handler, DIRECTORY_TO_WATCH, recursive=False) # True if you want subfolders checked.
         self.observer.start()
         try:
+            ticker = 0
+            # this loop is infinite! (Unless we crash)
             while True:
                 today = time.strftime("%Y-%m-%d %H:%M") # Year-Month-Day Hour:Minute
                 time.sleep(SECONDS_TO_SLEEP) # Configured above
-        except:
+
+                ticker = ticker +1                      # ticker +1, counting up to our goal
+
+                # ticker should be 300 to push to tumblr. (because science)
+                # 150 is 2.5 minutes, but with a 5 second sleep every iteration, this should be roughly 15 minutes.
+                if ticker >= 300:
+                    try:
+                        if len(push_array) != 0:
+                            status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+
+                            imagePath = push_array[0]       # get the image/video path
+
+                            # Debugging code to help track everything nicely.
+                            Logger("Status update: %s\nImage Path: %s" % (status, imagePath) )
+
+                            push_array.remove(imagePath)               # push the old image off the stack
+
+                            # blank response is key
+                            response = '{}'
+
+                            #if (imagePath.find(".png") != '-1'):
+                            #    response = client.create_photo('livesimmy.tumblr.com', state="published", tags=tags_to_use, tweet=status, data=imagePath)                    
+                            #elif (imagePath.find(".mp4") != '-1'):
+                            response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption="SimmyDizzle Live Action Events!", tweet=status, data=imagePath)
+                            #else:
+                            #    response = '{UNKNOWN TYPE PROVIDED - Skipping}'
+
+                            # We didn't get the nice result?
+
+                            #if(len(response) > 0 and response.find('processing') != '-1'):
+                            #    push_array.append(imagePath)
+
+                            ticker = 0                      # reset the ticker to 0
+
+                            print("--------------------------------------------------------------------------------")
+
+                            # the state is in the response? It should read transcoding to be accurate.
+                            if "state" in response:
+                                print("File state: %s" % response['state'])
+                            elif "errors" in response:
+                                print("An error was encountered (details below), pushing the imagePath to the back of the array.")
+                                push_array.append(imagePath);
+                            else:
+                                print("Unknown state has been reached, expect an exception below.");
+
+                            # Response should always be from tumblr
+                            print("JSON Response from Tumblr:")
+                            print(json.dumps(response, indent=4))
+
+
+                            print("--------------------------------------------------------------------------------")
+                            if(len(push_array) != 0):
+                                print('\n\nRemaining entries')
+                                print(*push_array, sep = "\n")
+                                
+                    except Exception as e:
+                        print("Error occured within array handler:")
+                        print(e)
+                
+        except Exception as e:
             self.observer.stop()
-            print ("Error with the watcher")
+            print ("Error with the watcher:")
+            print (e)
 
         self.observer.join()
 
@@ -136,60 +202,42 @@ class Handler(FileSystemEventHandler):
 
             # Validate that the file type discovered is actually one that we can push
             # to twitter. (This is vital to ensure we don't push somethin that should be pushed)
-            for i in approved_types: 
-                if (event.src_path.find("." + approved_types[i]) != '-1'):
-                    found = True
-                    break
+            if (event.src_path.find(".png") != '-1'):
+                found = True
+            if (event.src_path.find(".mp4") != '-1'):
+                found = True
 
             # Moving on to bigger and brighter things
             if found: 
                 # load image/video
                 imagePath = event.src_path # this should be the file that was created
 
-                # Set the string, we don't want the tweet being blocked by repeating, so we set date/time of the event.
-                if USE_PHRASES:
-                    status = "#NPC " + STREAMER_NAME + " " + phrases[random.randint(0,len(phrases)-1)] + today + " " + WEBSITE_NAME
-                else:
-                    status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on @OfficialDlive" + WEBSITE_NAME
+                push_array.append(imagePath)
+                #print (push_array)
 
-                # if we are going to use RT bots
-                if USE_RT:
-                    status = status + " @sme_rt @DriptRT @FearRTs @Pulse_Rts"
-
-                # Debugging code to help track everything nicely.
-                Logger("Status update: %s\nImage Path: %s" % (status, imagePath) )
-                    
-                # Send the tweet.
-                if TWEEPY_CONTROL:
-                    # tweepy control is active, print it out!
-                    api.update_with_media(imagePath, status)
-                    
             else:
                 Logger("File is not an approved type")
 
-        elif event.event_type == 'modified':
+        #elif event.event_type == 'modified':
             # Taken any action here when a file is modified.
             # this print statement will be removed when we are done debuggin the application.
-            Logger("Received modified event - %s." % event.src_path)
+            #Logger("Received modified event - %s." % event.src_path)
 
 
 ###########################################################################################################
 # Prostitute the mission, I mean, execute the script function.
 if __name__ == '__main__':
-    # Creation of the actual interface, using authentication
-    api = tweepy.API(auth)
 
-    # Creates the user object. The me() method returns the user whose authentication keys were used.
-    user = api.me()
-   
-    if DEBUG_MODE:
-        # print out the list of approved filetypes
-        Logger("Accepted Filestypes: " + approved_types )
+    ###########################################################################################################
+    # Consumer keys and access tokens, used for OAuth
+    # you will need to generate these on tumblr.com
 
-        # Testing to see if the API is borked or not. (on boot, if this displays wrong, then something was done wrong)
-        Logger('Name: ' + user.name)
-        Logger('Location: ' + user.location)
-        Logger('Friends: ' + str(user.friends_count))
+    with open('tumblr_credentials.json', 'r') as f:
+        credentials = json.loads(f.read())
+        client = pytumblr.TumblrRestClient(credentials['consumer_key'], credentials['consumer_secret'], credentials['oauth_token'], credentials['oauth_token_secret'])
+
+
+    print (client.info())
 
     # Create watcher
     w = Watcher()
