@@ -113,8 +113,8 @@ the_timer = 400
 SECONDS_TO_SLEEP = 5 # 5 seconds was old default
 
 # CHANGE ME -- This is the folder where your new files will be scraped from!
-#DIRECTORY_TO_WATCH = "C:\\Users\\ldevi\\Videos\\Captures" # Windows Example: c:\\users\\myusername\\pictures\\
-DIRECTORY_TO_WATCH = "C:\\Users\\ldevi\\Videos\\Replays"
+#DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Captures" # Windows Example: c:\\users\\myusername\\pictures\\
+DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Replays"
 
 # Streamer-Name
 STREAMER_NAME = "SimmyDizzle"
