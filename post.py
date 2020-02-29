@@ -54,6 +54,34 @@ phrases = [
     'is out of crazy ideas'
 ]
 
+captions_to_use = [
+    'SimmyDizzle Live Presents:',
+    'Crazy times with SimmyDizzle:',
+    'SimmyDizzle and the whats this?',
+    'What-up fam! Check out SimmyDizzle!',
+    'SimmyDizzle Strikes Again!',
+    'SimmyDizzle is on a roll!',
+    'SimmyDizzle has something special here.',
+    'I cannot believe its not butter, SimmyDizzle Edition!',
+    'LiveSimmy is SimmyDizzle, duh!',
+    'Check this out fam',
+    'What do you guys think?',
+    'Is this the flavour of the month?',
+    'Thoughts?',
+    'Rip or Nah?',
+    'Hit that like and follow button fam!',
+    'Captions tend to be random'
+    'Sauce?',
+    'SimmyDizzle could fap to this.',
+    'Tarnations!',
+    'Git-Sum',
+    'No Pants Crew through and Through!',
+    'Founder of NPC reporting in!',
+    'Fancy no pantsie!',
+    'Blamsauce!',
+    'Magic here!',
+]
+
 ###########################################################################################################
 # array for tracking files to push.
 push_array = [] # empty array(list).
@@ -66,8 +94,8 @@ push_array = [] # empty array(list).
 SECONDS_TO_SLEEP = 5 # 5 seconds was old default
 
 # CHANGE ME -- This is the folder where your new files will be scraped from!
-#DIRECTORY_TO_WATCH = "c:\\users\\myusername\\pictures\\
-DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Replays"
+#DIRECTORY_TO_WATCH = "C:\\Users\\ldevi\\Videos\\Captures" # Windows Example: c:\\users\\myusername\\pictures\\
+DIRECTORY_TO_WATCH = "C:\\Users\\ldevi\\Videos\\Replays"
 
 # Streamer-Name
 STREAMER_NAME = "SimmyDizzle"
@@ -91,7 +119,7 @@ TWEEPY_CONTROL = False
 # get VERY spammy to those who follow you. Use with caution.
 USE_RT = True
 
-tags_to_use = ["LiveSimmy", "Streaming", "Games", "ok", "twitchtv", "twitch", "SimmyDizzle", "NextLevel", "video games", "video", "gaming"]
+tags_to_use = ["LiveSimmy", "Streaming", "Streamer", "Games", "ok", "twitchtv", "twitch", "SimmyDizzle", "NextLevel", "video games", "video", "gaming"]
 
 ###########################################################################################################
 
@@ -125,10 +153,30 @@ class Watcher:
 
                 # ticker should be 300 to push to tumblr. (because science)
                 # 150 is 2.5 minutes, but with a 5 second sleep every iteration, this should be roughly 15 minutes.
-                if ticker >= 300:
+                # updated to 500 to delay how long it will be between posts.
+                if ticker >= 500:
                     try:
                         if len(push_array) != 0:
-                            status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                            x = random.randrange(0,5)
+
+                            # Randomly generate a status message, between this and a random caption this should cause
+                            # the services like tumblr and twitter from encountering issues with using the same message
+                            # more than once. Preventing their systems from blocking 'spam' (not that this is spam)
+                            if(x == 0):
+                                status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                            elif(x==1):
+                                status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on " + WEBSITE_NAME + "."
+                            elif(x==2):
+                                status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                            elif(x==3):
+                                status = "#NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                            elif(x==4):
+                                status = "#NPC (" + today + ") Visit me on #Twitch. " + WEBSITE_NAME
+                            elif(x==5):
+                                status = "#NoPantsCrew #NPC (" + today + ") " + STREAMER_NAME + " on ze #Twitch. " + WEBSITE_NAME
+                            else:
+                                status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                                
 
                             imagePath = push_array[0]       # get the image/video path
 
@@ -143,14 +191,9 @@ class Watcher:
                             #if (imagePath.find(".png") != '-1'):
                             #    response = client.create_photo('livesimmy.tumblr.com', state="published", tags=tags_to_use, tweet=status, data=imagePath)                    
                             #elif (imagePath.find(".mp4") != '-1'):
-                            response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption="SimmyDizzle Live Action Events!", tweet=status, data=imagePath)
+                            response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption=captions_to_use[random.randrange(0, len(captions_to_use)-1)], tweet=status, data=imagePath)
                             #else:
                             #    response = '{UNKNOWN TYPE PROVIDED - Skipping}'
-
-                            # We didn't get the nice result?
-
-                            #if(len(response) > 0 and response.find('processing') != '-1'):
-                            #    push_array.append(imagePath)
 
                             ticker = 0                      # reset the ticker to 0
 
@@ -232,17 +275,23 @@ if __name__ == '__main__':
     # Consumer keys and access tokens, used for OAuth
     # you will need to generate these on tumblr.com
 
+    print("--------------------------------------------------------------------------------")
+    print("Loading credentials")
     with open('tumblr_credentials.json', 'r') as f:
         credentials = json.loads(f.read())
         client = pytumblr.TumblrRestClient(credentials['consumer_key'], credentials['consumer_secret'], credentials['oauth_token'], credentials['oauth_token_secret'])
 
 
-    print (client.info())
+    print("--------------------------------------------------------------------------------")
+    print (json.dumps(client.info(), indent=4))
+    print("--------------------------------------------------------------------------------")
 
+    print("Initiating Watcher class");
     # Create watcher
     w = Watcher()
 
     # Execute the watcher script
+    print("Watcher executed")
     w.run()
 
 ###########################################################################################################
