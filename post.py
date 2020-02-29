@@ -27,6 +27,8 @@ from watchdog.events import FileSystemEventHandler
 import json             # import the json package to process files
 import pytumblr         # import the pytumblr package
 
+# the google translator is important for parts of the future.
+from googletrans import Translator
 
 ###########################################################################################################
 # grab a baseline timeframe before main is called. (Filler)
@@ -98,6 +100,11 @@ captions_to_use = [
 # array for tracking files to push.
 push_array = [] # empty array(list).
 
+# Start the google translator (we need this for later)
+translator = Translator()
+
+old_timer = 400
+the_timer = 400
 
 ###########################################################################################################
 ##                               CONFIGURATIONAL SETTINGS FOR THE TWEET                                  ##
@@ -164,30 +171,62 @@ class Watcher:
                 # ticker should be 300 to push to tumblr. (because science)
                 # 150 is 2.5 minutes, but with a 5 second sleep every iteration, this should be roughly 15 minutes.
                 # updated to 500 to delay how long it will be between posts.
-                if ticker >= 500:
+                if ticker >= the_timer:
                     try:
                         if len(push_array) != 0:
                             x = random.randrange(0,5)
 
-                            # Randomly generate a status message, between this and a random caption this should cause
-                            # the services like tumblr and twitter from encountering issues with using the same message
-                            # more than once. Preventing their systems from blocking 'spam' (not that this is spam)
-                            if(x == 0):
-                                status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
-                            elif(x==1):
-                                status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on " + WEBSITE_NAME + "."
-                            elif(x==2):
-                                status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
-                            elif(x==3):
-                                status = "#NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
-                            elif(x==4):
-                                status = "#NPC (" + today + ") Visit me on #Twitch. " + WEBSITE_NAME
-                            elif(x==5):
-                                status = "#NoPantsCrew #NPC (" + today + ") " + STREAMER_NAME + " on ze #Twitch. " + WEBSITE_NAME
-                            else:
-                                status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                            try:
+                                # Randomly generate a status message, between this and a random caption this should cause
+                                # the services like tumblr and twitter from encountering issues with using the same message
+                                # more than once. Preventing their systems from blocking 'spam' (not that this is spam)
+                                if(x == 0):
+                                    status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                                elif(x==1):
+                                    status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on " + WEBSITE_NAME + "."
+                                elif(x==2):
+                                    status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                                elif(x==3):
+                                    status = "#NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                                elif(x==4):
+                                    status = "#NPC (" + today + ") Visit me on #Twitch. " + WEBSITE_NAME
+                                elif(x==5):
+                                    status = "#NoPantsCrew #NPC (" + today + ") " + STREAMER_NAME + " on ze #Twitch. " + WEBSITE_NAME
+                                else:
+                                    status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+    
+                                # assign the caption to use (for science)
+                                the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
                                 
-
+                                # are we going to translate?
+                                if (random.randrange(0,5) == 3):
+                                    x = random.randrange(0,5)
+                                    if(x == 0):
+                                        status = translator.translate(status, dest='ru')
+                                        the_caption = translator.translate(the_caption, dest='ru')
+                                    elif(x == 1):
+                                        status = translator.translate(status, dest='ja')
+                                        the_caption = translator.translate(the_caption, dest='ja')
+                                    elif(x == 2):
+                                        status = translator.translate(status, dest='fr')
+                                        the_caption = translator.translate(the_caption, dest='fr')
+                                    elif(x == 3):
+                                        status = translator.translate(status, dest='la')
+                                        the_caption = translator.translate(the_caption, dest='la')
+                                    elif(x == 4):
+                                        status = translator.translate(status, dest='ko')
+                                        the_caption = translator.translate(the_caption, dest='ko')
+                                    elif(x == 5):
+                                        status = translator.translate(status, dest='eo')
+                                        the_caption = translator.translate(the_caption, dest='eo')
+                            
+                            except Exception as e:
+                                print('An exception has occured, possibly in translations')
+                                print(e)
+                                print('Autocorrecting status and caption to defaults.')
+                                status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
+                                the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
+                                
                             imagePath = push_array[0]       # get the image/video path
 
                             # Debugging code to help track everything nicely.
@@ -201,12 +240,22 @@ class Watcher:
                             #if (imagePath.find(".png") != '-1'):
                             #    response = client.create_photo('livesimmy.tumblr.com', state="published", tags=tags_to_use, tweet=status, data=imagePath)                    
                             #elif (imagePath.find(".mp4") != '-1'):
-                            response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption=captions_to_use[random.randrange(0, len(captions_to_use)-1)], tweet=status, data=imagePath)
+                            response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption=the_caption, tweet=status, data=imagePath)
                             #else:
                             #    response = '{UNKNOWN TYPE PROVIDED - Skipping}'
 
                             ticker = 0                      # reset the ticker to 0
 
+                            # help randomize the amount of 'ticks' until the content is posted to tumblr
+                            # this will help avoid the appearance of being 'a bot', which is what we want to
+                            # avoid because we do not want the tumblr service to prevent our uploading
+                            if(old_timer < 400):
+                                the_timer = random.randrange(450, 700)
+                                old_timer = the_timer
+                            else
+                                the_timer = random.randrange(250, 600)
+                                old_timer = the_timer
+                            
                             print("--------------------------------------------------------------------------------")
 
                             # the state is in the response? It should read transcoding to be accurate.
