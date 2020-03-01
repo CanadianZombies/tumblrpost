@@ -265,6 +265,9 @@ class Watcher:
                                 print('Autocorrecting status and caption to defaults.')
                                 status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
                                 the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
+
+                            # add our website to the caption to link back to the OG content.
+                            the_caption = the_caption + ' ' + WEBSITE_NAME
                                 
                             imagePath = push_array[0]       # get the image/video path
 
