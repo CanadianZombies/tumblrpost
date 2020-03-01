@@ -10,7 +10,33 @@
 # Any image file should work properly out of the gate so long as it is not larger than 20MB if the API    #
 # guide is to be trusted.                                                                                 #
 ###########################################################################################################
-
+# tumblr: https://www.tumblr.com/docs/en/api/v2                                                           #
+# Rate limits:                                                                                            #
+#   300 API calls per minute, per IP address.                                                             #
+#    18,000 API calls per hour, per IP address.                                                           #
+#    432,000 API calls per day, per IP address.                                                           #
+#    1,000 API calls per hour, per consumer key.                                                          #
+#    5,000 API calls per day, per consumer key.                                                           #
+#    250 new posts (including reblogs) per day, per user.                                                 #
+#    150 images uploaded per day, per user.                                                               #
+#    200 follows per day, per user.                                                                       #
+#    1,000 likes per day, per user.                                                                       #
+#    10 new blogs per day, per user.                                                                      #
+#    10 videos uploaded per day, per user.                                                                #
+#    5 minutes of total video uploaded per day, per user.                                                 #
+###########################################################################################################
+# Highlight: 5 minutes of total video uploaded per day per user, this means after 5 1 minute uploads it   #
+# will reject any further uploads. This will return 8011 bad requeust. Sadly this cannot be 'tricked'     #
+# so as a result we continue to develop this, the qeuue will get bigger every day until the script resets #
+# or all items get eventually posted.                                                                     #
+# 8009 may also occur if there is a problem with the file, i.e. it cannot upload properly or it has an    #
+# error that is detected and cannot be transcoded as a result. If you see the same videos rejecting please#
+# remove them from the queue.                                                                             #
+###########################################################################################################
+# Screenshots (when the create_photo is properly employed) will allow for 250 posts per day.              #
+# With this volume of posts per day and the way our queue system works, you will not see 250 posts per    #
+# day using this method. However you will have a very 'active' tumblr page, with fresh content posting    #
+# on a reguular basis. And not 'scheduled'.                                                               #
 ###########################################################################################################
 # Import required modules(packages) to ensure that the twitterpost system will work.
 import random           # import the random number generator (for science)
@@ -20,6 +46,8 @@ import time             # import the time system
 import datetime         # import the datetime system
 
 import os               # import the operating system functions
+
+import re
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -103,9 +131,6 @@ push_array = [] # empty array(list).
 # Start the google translator (we need this for later)
 translator = Translator()
 
-old_timer = 400
-the_timer = 400
-
 ###########################################################################################################
 ##                               CONFIGURATIONAL SETTINGS FOR THE TWEET                                  ##
 ###########################################################################################################
@@ -114,7 +139,9 @@ SECONDS_TO_SLEEP = 5 # 5 seconds was old default
 
 # CHANGE ME -- This is the folder where your new files will be scraped from!
 #DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Captures" # Windows Example: c:\\users\\myusername\\pictures\\
-DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Replays"
+DIRECTORY_TO_WATCH = "C:\\Users\\myusuername\\Videos\\Replays"
+
+PATHS = ['C:\\Users\mysuername\\Videos\\Replays','C:\\Users\\myusername\\Videos\\Captures']       # Future
 
 # Streamer-Name
 STREAMER_NAME = "SimmyDizzle"
@@ -149,6 +176,14 @@ def Logger(str):
         print("{%s} %s" % (time.strftime("%Y-%m-%d %H:%M"), str))
 
 
+# finding a string within a string? you got it dude!
+# https://stackoverflow.com/questions/4154961/find-substring-in-string-but-only-if-whole-words
+def string_found(string1, string2):
+    if string1.find(string2) > 0:
+        return True
+
+    return False
+
 ###########################################################################################################
 # Watcher class for tracking a directory and its changes.
 class Watcher:
@@ -157,8 +192,12 @@ class Watcher:
 
     def run(self):
         event_handler = Handler()
-        self.observer.schedule(event_handler, DIRECTORY_TO_WATCH, recursive=False) # True if you want subfolders checked.
+        self.observer.schedule(event_handler, PATHS[0], recursive=False) # True if you want subfolders checked.
+        self.observer.schedule(event_handler, PATHS[1], recursive=False) # True if you want subfolders checked.
         self.observer.start()
+        
+        old_timer = 400
+        the_timer = 400
         try:
             ticker = 0
             # this loop is infinite! (Unless we crash)
@@ -237,12 +276,14 @@ class Watcher:
                             # blank response is key
                             response = '{}'
 
-                            #if (imagePath.find(".png") != '-1'):
-                            #    response = client.create_photo('livesimmy.tumblr.com', state="published", tags=tags_to_use, tweet=status, data=imagePath)                    
-                            #elif (imagePath.find(".mp4") != '-1'):
-                            response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption=the_caption, tweet=status, data=imagePath)
-                            #else:
-                            #    response = '{UNKNOWN TYPE PROVIDED - Skipping}'
+                            if (string_found(imagePath, 'png') != False):
+                                print("Attempting to queue photo post:")
+                                response = client.create_photo('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption=the_caption, tweet=status, data=imagePath)                    
+                            elif (string_found(imagePath, 'mp4') != False):
+                                print("Attempting to queue video post:")
+                                response = client.create_video('livesimmy.tumblr.com', state="published", tags=tags_to_use, caption=the_caption, tweet=status, data=imagePath)
+                            else:
+                                response = '{UNKNOWN TYPE PROVIDED - Skipping}'
 
                             ticker = 0                      # reset the ticker to 0
 
@@ -250,11 +291,12 @@ class Watcher:
                             # this will help avoid the appearance of being 'a bot', which is what we want to
                             # avoid because we do not want the tumblr service to prevent our uploading
                             if(old_timer < 400):
+                                old_timer = the_timer
                                 the_timer = random.randrange(450, 700)
+
+                            else:
                                 old_timer = the_timer
-                            else
                                 the_timer = random.randrange(250, 600)
-                                old_timer = the_timer
                             
                             print("--------------------------------------------------------------------------------")
 
@@ -276,7 +318,7 @@ class Watcher:
                             if(len(push_array) != 0):
                                 print('\n\nRemaining entries')
                                 print(*push_array, sep = "\n")
-                                
+                            print ("Next post is in %d seconds or %d minutes." % ((the_timer * SECONDS_TO_SLEEP), (the_timer * SECONDS_TO_SLEEP)/60 ) )
                     except Exception as e:
                         print("Error occured within array handler:")
                         print(e)
@@ -304,10 +346,14 @@ class Handler(FileSystemEventHandler):
 
             # Validate that the file type discovered is actually one that we can push
             # to twitter. (This is vital to ensure we don't push somethin that should be pushed)
-            if (event.src_path.find(".png") != '-1'):
+            if (string_found(event.src_path, 'png') != False):
                 found = True
-            if (event.src_path.find(".mp4") != '-1'):
+                print("New photo found")
+            elif (string_found(event.src_path, 'mp4') != False):
                 found = True
+                print("New video found")
+            else:
+                found = False
 
             # Moving on to bigger and brighter things
             if found: 
@@ -339,7 +385,6 @@ if __name__ == '__main__':
     with open('tumblr_credentials.json', 'r') as f:
         credentials = json.loads(f.read())
         client = pytumblr.TumblrRestClient(credentials['consumer_key'], credentials['consumer_secret'], credentials['oauth_token'], credentials['oauth_token_secret'])
-
 
     print("--------------------------------------------------------------------------------")
     print (json.dumps(client.info(), indent=4))
