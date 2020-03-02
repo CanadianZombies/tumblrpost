@@ -1,14 +1,11 @@
 ###########################################################################################################
-#                        Twitter AUTOPOST script by David Simmerson (SimmyDizzle)                         #
+#                         Tumblr AUTOPOST script by David Simmerson (SimmyDizzle)                         #
 ###########################################################################################################
-# This script will scrape a folder every 5 seconds for new files and then automatically tweet them to the #
-# twitterverse on the specified twitter account.                                                          #
+# Please think of the children, on tumblr we can post 10 videos per day via API calls.                    #
+# Or a maximum of 5 minutes of video content. 30 second clips * 10 = 5 minutes if my math is right.       #
+# Or 5 1 minute videos. Keep this in mind.                                                                #
 ###########################################################################################################
-# Videos can be a maximum of 2 minutes and 20 seconds and have to be the appropriate file format otherwise#
-# the tweet will be rejected. Videos cannot exceed 512MB, otherwise they will be rejected.                #
-###########################################################################################################
-# Any image file should work properly out of the gate so long as it is not larger than 20MB if the API    #
-# guide is to be trusted.                                                                                 #
+# Images can be posted at a rate of 150 per day. The system only detects png files for the time being.    #
 ###########################################################################################################
 # tumblr: https://www.tumblr.com/docs/en/api/v2                                                           #
 # Rate limits:                                                                                            #
