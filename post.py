@@ -44,6 +44,7 @@ import array            # import the array module
 
 import time             # import the time system
 import datetime         # import the datetime system
+from datetime import date
 
 import os               # import the operating system functions
 
@@ -63,38 +64,36 @@ from googletrans import Translator
 today = time.strftime("%Y-%m-%d %H:%M")
 
 ###########################################################################################################
-# list of our approved filetypes
-approved_types = ['jpeg', 'jpg', 'gif', 'png', 'bmp', 'avi', 'mp4', 'mkv']
-
-###########################################################################################################
 # list of phrases used in tweet generation (we can keep adding these)
 # the idea will be like STREAMER_NAME + COMMENT, so like 'SimmyDizzle is on a roll!' will be generated.
 phrases = [
-    'Strikes Again!',
-    'is on a roll!',
-    'cannot believe its not butter!',
-    'has something special here.',
-    'needs your approval! Hit that like and follow button!',
-    'cannot believe it!',
-    'would like to your opinion!',
-    'is this the flavour of the month?',
-    'what do you think?',
-    'has let loose something here!',
-    'thinks this is interesting enough to share.',
-    'is out of crazy ideas'
+    ' strikes again!',
+    ' is on a roll!',
+    ' cannot believe its not butter!',
+    ' has something special here.',
+    ' needs your approval! Hit that like and follow button!',
+    ' cannot believe it!',
+    ' would like to your opinion!',
+    ' is this the flavour of the month?',
+    ' what do you think?',
+    ' has let loose something here!',
+    ' thinks this is interesting enough to share.',
+    ' is out of crazy ideas'
+    ' could fap to this.'
+    ' would fap to this.'
+    ' has fapped to this.'
+    ' has truly gone mad!',
+    ' is thinking this is something everyone should see.'
+    ' is thinking this is badass.'
 ]
 
-# Will update this later to use STREAMER_NAME instead of using hard-coded data.
+#########################################################################################################
+# This block does NOT use the STREAMER_NAME variable at all in the generation, this is just a straight up
+# random generation string. (Completed) with the reason of being stuff that should not be randomly generated.
+# Basically this is for complete sentences that do not need the streamers name.
 captions_to_use = [
-    'SimmyDizzle Live Presents:',
-    'Crazy times with SimmyDizzle:',
-    'SimmyDizzle and the whats this?',
-    'What-up fam! Check out SimmyDizzle!',
-    'SimmyDizzle Strikes Again!',
-    'SimmyDizzle is on a roll!',
-    'SimmyDizzle has something special here.',
-    'I cannot believe its not butter, SimmyDizzle Edition!',
-    'LiveSimmy is SimmyDizzle, duh!',
+    'Crazy times',
+    'What up fam!',
     'Check this out fam',
     'What do you guys think?',
     'Is this the flavour of the month?',
@@ -103,7 +102,6 @@ captions_to_use = [
     'Hit that like and follow button fam!',
     'Captions tend to be random'
     'Sauce?',
-    'SimmyDizzle could fap to this.',
     'Tarnations!',
     'Git-Sum',
     'No Pants Crew through and Through!',
@@ -124,9 +122,109 @@ captions_to_use = [
     'do dew do do',
 ]
 
+#########################################################################################################
+# this is the easier way to generate strings for random messages. The messages above while working
+# are not always the best bets. This method here is more 'creative' as they generate multiple methods
+# of hilarity within the string. Depending how we sculpt this, we could have thousands of possibilities
+# with minimal work.
+# STREAMER_NAME + rand_1 + rand_2 + rand_3 + rand_4 = caption ?
+rand_1 = [
+    ' is',
+    ' was',
+    ' continues',
+    ' continued',
+    ' persists at',
+    ' prevails at',
+    ' is proficiently',
+    ' cannot be'
+    ' the badass is',
+    ' the badass was',
+    ' the badass continues',
+    ' the true badass is',
+    ' the simplord is',
+    ' the simplord was',
+    ' the badass simplord is',
+    ' the badass simplord was',
+    ' the badass simplord continues',
+    ', the pimp, is',
+    ', the simp, is',
+    ', the pimp, was',
+    ', the simp, was',
+    '(NPC Founder) was',
+    '(NPC Founder) is',
+    '(NPC Founder) continues',
+    '(NPC Founder) continued',
+    '\'s is here, ',
+    '\'s was here, '
+]
+
+rand_2 = [
+    ' gaming',
+    ' streaming',
+    ' playing',
+    ' crushing',
+    ' rocking',
+    ' blasting'
+    ' winning',
+    ' losing',
+    ' crushing it',
+    ' battling',
+    ' winning it',
+    ' playing it',
+    ' rocking it',
+]
+
+rand_3 = [
+    ' hardcore',
+    ', hardcore',
+    ', masterfully',
+    ' hardcore, 100% masterclass',
+    ' masterfully',
+    ' with masterclass style',
+    ' with skill',
+    ' with style',
+    ' with clout',
+    ' with the right stuff',
+    ' with what it takes',
+    ' exemplifying skill',
+    ' exemplifying technique',
+    ' famously',
+    ' sensationally',
+    ' awkwardly',
+    ' badly',
+    ' poorly',
+    ' swimmingly',
+    ' swimmingly well',
+    ' well'
+]
+
+rand_4 = [
+    '.',
+    '!',
+    ', thoughts?',
+    '?',
+    '??',
+    '!!',
+    '..',
+    ', maybe.',
+    ', maybe!',
+    ', maybe?',
+    ', perhaps.',
+    ', perhaps!',
+    ', perhaps?',
+    ', perhaps...',
+    '...',
+    ', maybe...',
+    ', thoughts...',
+    ', thoughts?!?',
+    ', for your consideration.'
+]
+
 ###########################################################################################################
 # array for tracking files to push.
 push_array = [] # empty array(list).
+exceeded_files = []
+broken_files = []
 
 # Start the google translator (we need this for later)
 translator = Translator()
@@ -138,13 +236,10 @@ translator = Translator()
 SECONDS_TO_SLEEP = 5 # 5 seconds was old default
 
 # CHANGE ME -- This is the folder where your new files will be scraped from!
-#DIRECTORY_TO_WATCH = "C:\\Users\\myusername\\Videos\\Captures" # Windows Example: c:\\users\\myusername\\pictures\\
-DIRECTORY_TO_WATCH = "C:\\Users\\myusuername\\Videos\\Replays"
-
 PATHS = ['C:\\Users\mysuername\\Videos\\Replays','C:\\Users\\myusername\\Videos\\Captures']       # Future
 
 # Streamer-Name
-STREAMER_NAME = "SimmyDizzle"
+STREAMER_NAME = "SimmyDizzle"             #Put your streamername here
 
 # Website-Name
 WEBSITE_NAME = "http://www.twitch.tv/SimmyDizzle"
@@ -198,18 +293,38 @@ class Watcher:
         
         old_timer = 400
         the_timer = 400
+        currentDate = date.today()
+        lastDate = currentDate
+        
         try:
             ticker = 0
             # this loop is infinite! (Unless we crash)
             while True:
                 today = time.strftime("%Y-%m-%d %H:%M") # Year-Month-Day Hour:Minute
-                time.sleep(SECONDS_TO_SLEEP) # Configured above
+                
+                lastDate = currentDate                  # datetime tracking
+                currentDate = date.today()              # change the currentDate value
+                
+                # if we changed current day, check against the exceeded_files array
+                # and restore any pending files
+                if (lastDate != currentDate)
+                    if(len(exceeded_files) > 0):
+                        for h in exceeded_files:
+                            push_array.append(h)
+                            exceeded_files.remove(h)
+                            
+                        print('\n\Added entries from exceeded_files array:')
+                        print(*push_array, sep = "\n")   
+                
+                # sleep the script for a specified length of time
+                time.sleep(SECONDS_TO_SLEEP)            # Configured above
 
                 ticker = ticker +1                      # ticker +1, counting up to our goal
 
-                # ticker should be 300 to push to tumblr. (because science)
-                # 150 is 2.5 minutes, but with a 5 second sleep every iteration, this should be roughly 15 minutes.
-                # updated to 500 to delay how long it will be between posts.
+                # The ticker will go up by one every SECONDS_TO_SLEEP. Default value of 5 seconds.
+                # the_timer will be given a value (in seconds to sleep). Therefore, the total time
+                # for the next 'execution' of the code below will be the_timer * SECONDS_TO_SLEEP (in real time)
+                # Defaulting to 5 seconds works wonderfully, I recommend not changing this value.
                 if ticker >= the_timer:
                     try:
                         if len(push_array) != 0:
@@ -219,6 +334,8 @@ class Watcher:
                                 # Randomly generate a status message, between this and a random caption this should cause
                                 # the services like tumblr and twitter from encountering issues with using the same message
                                 # more than once. Preventing their systems from blocking 'spam' (not that this is spam)
+                                # This fills the 'tweet' block, which is not-used unless you have your tumblr autoposting to your twitter
+                                # which does *NOT* always work. This is why IFTTT has been used in this.
                                 if(x == 0):
                                     status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
                                 elif(x==1):
@@ -235,8 +352,16 @@ class Watcher:
                                     status = "#NPC (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
     
                                 # assign the caption to use (for science)
-                                the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
-                                
+                                rx = random.randrange(0,3);
+                                if(rx == 0):
+                                    the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
+                                elif(rx == 1):
+                                    the_caption = STREAMER_NAME + phrases[random.randrange(0, len(phrases)-1]
+                                elif(rx == 2:
+                                    the_caption = STREAMER_NAME + rand_1[random.randrange(0, len(rand_1)-1)] + rand_2[random.randrange(0,len(rand_2)-1)] + rand_3[random.randrange(0,len(rand_3)-1)] + rand_4[random.randrange(0,len(rand_3)-1)]
+                                else:
+                                    the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
+                                     
                                 # are we going to translate?
                                 if (random.randrange(0,5) == 3):
                                     x = random.randrange(0,5)
@@ -266,13 +391,14 @@ class Watcher:
                                 status = "#NPC / #NoPantsCrew (" + today + ") Visit " + STREAMER_NAME + " over on #Twitch. " + WEBSITE_NAME
                                 the_caption = captions_to_use[random.randrange(0, len(captions_to_use)-1)]
 
+                            ####################################################################################################
                             # add our website to the caption to link back to the OG content.
-                            the_caption = the_caption + ' ' + WEBSITE_NAME
+                            the_caption = the_caption + ' (' + WEBSITE_NAME + ')'
                                 
                             imagePath = push_array[0]       # get the image/video path
 
                             # Debugging code to help track everything nicely.
-                            Logger("Status update: %s\nImage Path: %s" % (status, imagePath) )
+                            Logger("Status update: %s\nImage Path: %s\nCaption update: %s\n" % (status, imagePath, the_caption) )
 
                             push_array.remove(imagePath)               # push the old image off the stack
 
@@ -295,11 +421,21 @@ class Watcher:
                             # avoid because we do not want the tumblr service to prevent our uploading
                             if(old_timer < 400):
                                 old_timer = the_timer
-                                the_timer = random.randrange(450, 700)
-
+                                # Photos we don't need long wait times for to post the next content
+                                # we don't want to wait an hour if we do not need to, but we still want
+                                # to be random.
+                                if (string_found(imagePath, 'png') != False):
+                                    the_timer = random.randrange(150, 450)
+                                else
+                                    the_timer = random.randrange(450, 700)
                             else:
                                 old_timer = the_timer
-                                the_timer = random.randrange(250, 600)
+                                # same thing here, no need to hold thinsg up for a png file.
+                                # tumblr accepts those without much issue.
+                                if (string_found(imagePath, 'png') != False):
+                                    the_timer = random.randrange(250, 600)
+                                else:
+                                    the_timer = random.randrange(400, 650)
                             
                             print("--------------------------------------------------------------------------------")
 
@@ -308,7 +444,15 @@ class Watcher:
                                 print("File state: %s" % response['state'])
                             elif "errors" in response:
                                 print("An error was encountered (details below), pushing the imagePath to the back of the array.")
-                                push_array.append(imagePath);
+                                print(response['errors'])
+                                if "8009" in response['errors']:
+                                     # 8009 is used when videos encounter an issue on upload.
+                                     broken_files.append(imagePath)
+                                elif "8011" in response['errors']:
+                                     # error 8011 is when we have exceeded our daily quota for videos
+                                     exceeded_files.append(imagePath)
+                                else:
+                                    push_array.append(imagePath);
                             else:
                                 print("Unknown state has been reached, expect an exception below.");
 
@@ -316,11 +460,22 @@ class Watcher:
                             print("JSON Response from Tumblr:")
                             print(json.dumps(response, indent=4))
 
-
                             print("--------------------------------------------------------------------------------")
                             if(len(push_array) != 0):
                                 print('\n\nRemaining entries')
                                 print(*push_array, sep = "\n")
+                            else:
+                                # let us re-try those broken files shall we?
+                                if(len(broken_files) > 0):
+                                    for h in broken_files:
+                                        push_array.append(h)
+                                        broken_files.remove(h)
+                                     
+                                    print('\n\Added entries from broken_files array:')
+                                    print(*push_array, sep = "\n")   
+                                     
+                            #######################################################################################################
+                            # Print out when the next post will be. For those interested in it.
                             print ("Next post is in %d seconds or %d minutes." % ((the_timer * SECONDS_TO_SLEEP), (the_timer * SECONDS_TO_SLEEP)/60 ) )
                     except Exception as e:
                         print("Error occured within array handler:")
