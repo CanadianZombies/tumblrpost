@@ -361,26 +361,48 @@ class Watcher:
                                      
                                 # are we going to translate?
                                 if (random.randrange(0,5) == 3):
-                                    x = random.randrange(0,5)
+                                    x = random.randrange(0,7)
                                     if(x == 0):
-                                        status = translator.translate(status, dest='ru')
-                                        the_caption = translator.translate(the_caption, dest='ru')
-                                    elif(x == 1):
-                                        status = translator.translate(status, dest='ja')
-                                        the_caption = translator.translate(the_caption, dest='ja')
-                                    elif(x == 2):
-                                        status = translator.translate(status, dest='fr')
-                                        the_caption = translator.translate(the_caption, dest='fr')
-                                    elif(x == 3):
-                                        status = translator.translate(status, dest='la')
-                                        the_caption = translator.translate(the_caption, dest='la')
-                                    elif(x == 4):
-                                        status = translator.translate(status, dest='ko')
-                                        the_caption = translator.translate(the_caption, dest='ko')
-                                    elif(x == 5):
-                                        status = translator.translate(status, dest='eo')
-                                        the_caption = translator.translate(the_caption, dest='eo')
-                            
+                                        tr_status = translator.translate(status, dest='ru')
+                                        tr_the_caption = translator.translate(the_caption, dest='ru')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     elif(x == 1):
+                                        tr_status = translator.translate(status, dest='ja')
+                                        tr_the_caption = translator.translate(the_caption, dest='ja')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     elif(x == 2):
+                                        tr_status = translator.translate(status, dest='fr')
+                                        tr_the_caption = translator.translate(the_caption, dest='fr')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     elif(x == 3):
+                                        tr_status = translator.translate(status, dest='la')
+                                        tr_the_caption = translator.translate(the_caption, dest='la')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     elif(x == 4):
+                                        tr_status = translator.translate(status, dest='ko')
+                                        tr_the_caption = translator.translate(the_caption, dest='ko')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     elif(x == 5):
+                                        tr_status = translator.translate(status, dest='eo')
+                                        tr_the_caption = translator.translate(the_caption, dest='eo')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     elif(x == 6):
+                                        tr_status = translator.translate(status, dest='de')
+                                        tr_the_caption = translator.translate(the_caption, dest='de')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     else:
+                                        tr_status = translator.translate(status, dest='hi')
+                                        tr_the_caption = translator.translate(the_caption, dest='hi')
+                                        status = tr_status.text
+                                        the_caption = tr_status.text
+                                     
                             except Exception as e:
                                 print('An exception has occured, possibly in translations')
                                 print(e)
