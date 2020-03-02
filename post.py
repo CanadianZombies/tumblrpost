@@ -75,13 +75,18 @@ phrases = [
     ' what do you think?',
     ' has let loose something here!',
     ' thinks this is interesting enough to share.',
-    ' is out of crazy ideas'
+    ' is out of crazy ideas.'
     ' could fap to this.'
     ' would fap to this.'
     ' has fapped to this.'
     ' has truly gone mad!',
     ' is thinking this is something everyone should see.'
     ' is thinking this is badass.'
+    ' is wondering if you could give me your thoughts on this.'
+    ' is pontificating existence, and this.',
+    ' would like to know what you think of this.',
+    ' has a crazy idea.',
+    ' had a crazy idea.',
 ]
 
 #########################################################################################################
@@ -101,6 +106,28 @@ captions_to_use = [
     'Sauce?',
     'Tarnations!',
     'Git-Sum',
+    'Caption this',
+    'Do not forget to follow!',
+    'If you like this, hit that RT and like button!',
+    'RT this if you like it!',
+    'Do not forget to like this post!',
+    'Feedback people?',
+    'I\'d like some feedback on this.',
+    'Like, follow, subscribe to my page, see my profile for details!'
+    'Follow, like, these things are important!'
+    'Spread the word!',
+    'Hit that RT button!'
+    'Share me with your family and friends, awww yeee.',
+    'Share me with your family and friends!',
+    'Share me with your family, I am a treat!',
+    'RT me to your grandma!'
+    'What are your thoughts on this?',
+    'Hey, what is your take on this?',
+    'Fam, serious question, what do you think?',
+    'Heresy, this is heresy!',
+    'Exterminatus!',
+    'I would like to know your opinion on this matter.',
+    'Do tell me what you think.',
     'No Pants Crew through and Through!',
     'Founder of NPC reporting in!',
     'Fancy no pantsie!',
@@ -116,7 +143,21 @@ captions_to_use = [
     'Pan, Cast-Iron, Pan.',
     'Is this where the zombie apocalypse starts?',
     'do do do do do... Do do!?',
+    'Thank you for looking at this.',
+    'Thanks be to you for your viewership!',
     'do dew do do',
+    'Want some more?',
+    'Would you like more?',
+    'If you could, would you want more?',
+    'More is better than less, would you like more?',
+    'Your thoughts?',
+    'Emoji for your thoughts?',
+    'What ya think of this?',
+    'Ha!',
+    'Guess what I was thinking.',
+    'Do you know what I was thinking?',
+    'Uhh, blamsauce?'
+    'Blam to the sauce!'
 ]
 
 #########################################################################################################
@@ -267,7 +308,48 @@ def Logger(str):
     if DEBUG_MODE:
         print("{%s} %s" % (time.strftime("%Y-%m-%d %H:%M"), str))
 
+###########################################################################################################
+# Write the files to flatfile.
+def writeFiles():
+    with open('phrases.dat', 'w') as filehandle:
+        filehandle.writelines("%s\n" % place for place in phrases)
 
+    with open('captions_to_use.dat', 'w') as filehandle:
+        filehandle.writelines("%s\n" % place for place in captions_to_use)
+
+    with open('rand_1.dat', 'w') as filehandle:
+        filehandle.writelines("%s\n" % place for place in rand_1)
+
+    with open('rand_2.dat', 'w') as filehandle:
+        filehandle.writelines("%s\n" % place for place in rand_2)
+        
+    with open('rand_3.dat', 'w') as filehandle:
+        filehandle.writelines("%s\n" % place for place in rand_3)
+
+    with open('rand_4.dat', 'w') as filehandle:
+        filehandle.writelines("%s\n" % place for place in rand_4)
+
+###########################################################################################################
+# open our flat-files that we have dumped.
+def openFiles():
+    with open('phrases.dat', 'r') as filehandle:
+        phrases = [current_place.rstrip() for current_place in filehandle.readlines()]
+  
+    with open('captions_to_use.dat', 'r') as filehandle:
+        captions_to_use = [current_place.rstrip() for current_place in filehandle.readlines()]
+
+    with open('rand_1.dat', 'r') as filehandle:
+        rand_1 = [current_place.rstrip() for current_place in filehandle.readlines()]
+
+    with open('rand_2.dat', 'r') as filehandle:
+        rand_2 = [current_place.rstrip() for current_place in filehandle.readlines()]
+
+    with open('rand_3.dat', 'r') as filehandle:
+        rand_3 = [current_place.rstrip() for current_place in filehandle.readlines()]
+
+    with open('rand_4.dat', 'r') as filehandle:
+        rand_4 = [current_place.rstrip() for current_place in filehandle.readlines()]
+        
 # finding a string within a string? you got it dude!
 # https://stackoverflow.com/questions/4154961/find-substring-in-string-but-only-if-whole-words
 def string_found(string1, string2):
@@ -566,6 +648,10 @@ if __name__ == '__main__':
     print("--------------------------------------------------------------------------------")
     print (json.dumps(client.info(), indent=4))
     print("--------------------------------------------------------------------------------")
+
+    # attempt to open our flat-files (important)
+    #writeFiles()
+    openFiles()
 
     print("Initiating Watcher class");
     # Create watcher
