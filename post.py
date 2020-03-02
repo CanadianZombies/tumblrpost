@@ -65,6 +65,7 @@ today = time.strftime("%Y-%m-%d %H:%M")
 # the idea will be like STREAMER_NAME + COMMENT, so like 'SimmyDizzle is on a roll!' will be generated.
 phrases = [
     ' strikes again!',
+    ' has struck again!',
     ' is on a roll!',
     ' cannot believe its not butter!',
     ' has something special here.',
@@ -73,6 +74,9 @@ phrases = [
     ' would like to your opinion!',
     ' is this the flavour of the month?',
     ' what do you think?',
+    ' gamer extroadinaire!',
+    ' lover extroadinaire!',
+    ' is thinking about an onlyfans page, ya know, for science.',
     ' has let loose something here!',
     ' thinks this is interesting enough to share.',
     ' is out of crazy ideas.'
@@ -87,6 +91,17 @@ phrases = [
     ' would like to know what you think of this.',
     ' has a crazy idea.',
     ' had a crazy idea.',
+    ' would like you to give a follow.',
+    ' would like you to share this around.',
+    ' would like you to RT this.',
+    ' requires you to fap to this, or RT.',
+    ' requires you to fap to this, or RT, choice is yours.',
+    ' requests you clickity on that RT button!',
+    ' thanks you for your viewership.',
+    ' thanks you for being here.',
+    ' thanks you for caring.',
+    ' is thirsty.',
+    '...',
 ]
 
 #########################################################################################################
@@ -101,11 +116,23 @@ captions_to_use = [
     'Is this the flavour of the month?',
     'Thoughts?',
     'Rip or Nah?',
+    'Well fam, join me on stream!',
+    'Remember to join me on stream!',
+    'Remember I stream, so join me!',
+    'Drop that follow here, and on stream!',
     'Hit that like and follow button fam!',
-    'Captions tend to be random'
+    'Captions tend to be random',
     'Sauce?',
     'Tarnations!',
+    'Has this made you thirsty for me? It should!',
+    'Join the No Pants Crew Discord: https://discord.gg/FnQrQ5N',
+    'Do not forget to join the No Pants Crew Discord: https://discord.gg/FnQrQ5N',
+    'The No Pants Crew and I invite you to check this shit out!',
+    'The No Pants Crew and I invite you to check this out!',
+    'The No Pants Crew and I invite you to follow us on stream!',
     'Git-Sum',
+    'Is that a challenge?',
+    'I think that is a challenge.',
     'Caption this',
     'Do not forget to follow!',
     'If you like this, hit that RT and like button!',
@@ -113,8 +140,8 @@ captions_to_use = [
     'Do not forget to like this post!',
     'Feedback people?',
     'I\'d like some feedback on this.',
-    'Like, follow, subscribe to my page, see my profile for details!'
-    'Follow, like, these things are important!'
+    'Like, follow, subscribe to my page, see my profile for details!',
+    'Follow, like, these things are important!',
     'Spread the word!',
     'Hit that RT button!'
     'Share me with your family and friends, awww yeee.',
@@ -154,10 +181,27 @@ captions_to_use = [
     'Emoji for your thoughts?',
     'What ya think of this?',
     'Ha!',
+    'Follow me for more of this stuff, here, in this. Yeah.',
+    'Follow me for more of this!',
+    'Give a follow if you like what you see!',
+    '[Hypnotoad Eyes] Follow Me, Share Me, subscribe to me [/Hypnotoad Eyes]',
+    '[Hypnotoad Eyes] Follow Me, Share Me, subscribe to me [/Hypnotoad Eyes] What was that?',
+    '[Hypnotoad Eyes] Follow Me, Share Me, subscribe to me [/Hypnotoad Eyes] Yussssss!',
+    'I am just a click away from being followed, give that click, do it, do it do it do it!',
+    'I am not wearing pants, or am I. No Pants Crew for Life!', 
     'Guess what I was thinking.',
     'Do you know what I was thinking?',
-    'Uhh, blamsauce?'
-    'Blam to the sauce!'
+    'Uhh, blamsauce?',
+    'Blam to the sauce!',
+    'Winner Winner drinking paint thinner!',
+    'RT for clout!',
+    'RT for prestige!', 
+    'Retweet for clout!',
+    'Retweet for prestige!',
+    'Oooh Shiny!',
+    'Pizzazz!',
+    '...',
+    'I suggest recklessness!'
 ]
 
 #########################################################################################################
@@ -198,23 +242,30 @@ rand_1 = [
 
 rand_2 = [
     ' gaming',
+    ' playing games',
+    ' streaming games',
+    ' winning games',
     ' streaming',
     ' playing',
     ' crushing',
     ' rocking',
     ' blasting'
+    ' dominating',
+    ' dominating it',
     ' winning',
     ' losing',
     ' crushing it',
     ' battling',
     ' winning it',
     ' playing it',
-    ' rocking it',
+    ' rocking it'
 ]
 
 rand_3 = [
     ' hardcore',
+    ' advantageously'
     ', hardcore',
+    ' hardcore porn style',
     ', masterfully',
     ' hardcore, 100% masterclass',
     ' masterfully',
@@ -225,6 +276,8 @@ rand_3 = [
     ' with the right stuff',
     ' with what it takes',
     ' exemplifying skill',
+    ' with pizzazz',
+    ' with might and main',
     ' exemplifying technique',
     ' famously',
     ' sensationally',
@@ -233,10 +286,16 @@ rand_3 = [
     ' poorly',
     ' swimmingly',
     ' swimmingly well',
+    ' seemingly well',
     ' well'
 ]
 
 rand_4 = [
+    '.',
+    '.',
+    '.',
+    '.',
+    '.',
     '.',
     '!',
     ', thoughts?',
@@ -651,7 +710,7 @@ if __name__ == '__main__':
 
     # attempt to open our flat-files (important)
     #writeFiles()
-    openFiles()
+    #openFiles()
 
     print("Initiating Watcher class");
     # Create watcher
