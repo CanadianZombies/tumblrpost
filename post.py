@@ -30,10 +30,10 @@
 # error that is detected and cannot be transcoded as a result. If you see the same videos rejecting please#
 # remove them from the queue.                                                                             #
 ###########################################################################################################
-# Screenshots (when the create_photo is properly employed) will allow for 250 posts per day.              #
-# With this volume of posts per day and the way our queue system works, you will not see 250 posts per    #
-# day using this method. However you will have a very 'active' tumblr page, with fresh content posting    #
-# on a reguular basis. And not 'scheduled'.                                                               #
+# Screenshots can account for 150 posts per day out of a maximum 250 posts per day.                       #
+# This means that between screenshots and videos, we can have a maximum of 160 posts per day, however     #
+# the default timer system in this script will at best allow for 15-20 posts per day and will continue to #
+# hold onto videos and photos until the 'lists' are empty. Which can take days if properly utilized.      #
 ###########################################################################################################
 # Import required modules(packages) to ensure that the twitterpost system will work.
 import random           # import the random number generator (for science)
