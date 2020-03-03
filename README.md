@@ -35,11 +35,26 @@ across to handle this unless twitter decides to approve my application next time
 
 *** UPDATE ***
 This system now uses googletrans from PyPi, this will translate the 'caption' string and status into different languages.
-This is so that these can reach different groups of people. Hopefully.
+This is so that these can reach different groups of people. Hopefully. (Has been tested, officially works)
+########################################################################################################################################
+** load/save data files. **
+The system now loads data-files from flat-file. I left the 'writing' routines in the main code for now, if you want to write
+the arrays it is doable that way if you do not want to use flatfiles.  The flatfiles have been made available in this repository
+as is for how I use them on my stream.
+
+########################################################################################################################################
+** captions **
+The captions have 3 separate systems that build up. The third system is the biggest and most complicated system as it generates 
+hundreds of thousands of options based on the variables provided. The first two systems are set phrases, one that uses the STREAMER_NAME
+and one that does not use the STREAMER_NAME.
+
+Additionally it has been added to randomly translate these captions into different languages. I intend to clean up this system
+some more and make it easier for us to translate into more languages. This is great for reaching different audiences throughout
+the internet.
 
 ########################################################################################################################################
 ** THIS HAS NOT BEEN TESTED YET **
-Be warned that as this is not tested, it may not work, or may require minor editing to get up and running.
+Be warned that as this is not fully tested, it may not work, or may require minor editing to get up and running.
 I will be testing this when time provides and posting a corrected version.
 
 A note on the lack of testing, the source code has been run through PythonBuddy (pylint) for accuracy and it is
